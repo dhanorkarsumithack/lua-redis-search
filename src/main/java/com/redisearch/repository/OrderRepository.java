@@ -1,14 +1,13 @@
 package com.redisearch.repository;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.redisearch.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import redis.clients.jedis.JedisPooled;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Repository
 public class OrderRepository {
@@ -31,6 +30,39 @@ public class OrderRepository {
 
 
 
+    public List<String > search1(String searchKey){
+
+        try {
+            List<String> results = new ArrayList<>();
+
+            // List of Redis keys to search through (assuming "orders" and "orders1" as in your Lua script)
+            String[] redisKeys = {"orders"};
+
+            for (String key : redisKeys) {
+                Map<String, String> orders = jedis.hgetAll(key);
+
+                for (Map.Entry<String, String> entry : orders.entrySet()) {
+                    String json = entry.getValue().toLowerCase();
+
+                    if (json.contains(searchKey.toLowerCase())) {
+                        results.add(entry.getValue());
+                    }
+                }
+            }
+
+            // Print results (optional)
+            System.out.println("Length -> " + results.size());
+            System.out.println(results);
+
+            return results;
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public List<Order> search(String searchKey) {
         try {
             long startTime = System.currentTimeMillis();
@@ -51,7 +83,7 @@ public class OrderRepository {
                     orders.add(order);
                 }
 
-                System.out.println("Length -> " + orders.size());
+                System.out.println("length-> "+orders.size());
                 System.out.println(orders);
                 return orders;
             } else {
@@ -93,5 +125,8 @@ public class OrderRepository {
 //            return null;
 //        }
 //    }
+
+
+
 
 }

@@ -52,7 +52,12 @@ public class Redisearchex2Application implements ApplicationRunner {
 		Order[] orders = objectMapper.readValue(data, Order[].class);
 
 		Arrays.stream(orders).forEach(orderRepo::save);
+		long startTime1 = System.currentTimeMillis();
+		orderRepo.search1("GMDC");
+		System.out.println("Jedis Execution Time: -> " + (System.currentTimeMillis()-startTime1)+" milli");
 
+
+		System.out.println("--------------------------------------------------------");
 		long startTime = System.currentTimeMillis();
 		List<Order> moong = orderRepo.search("GMDC");
 		System.out.println("Complete Execution Time: -> " + (System.currentTimeMillis()-startTime)+" milli");

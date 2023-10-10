@@ -18,8 +18,10 @@ public class RedisConfiguration {
     @Bean
     JedisPooled jedisPooled() {
         return new JedisPooled(
-                "localhost",
-                6379
+                "redis-13588.c261.us-east-1-4.ec2.cloud.redislabs.com",
+                13588,
+                "default",
+                "wX3ElBWyRkVhfSmLo1W2j0UsnxDdyGou"
         );
     }
 
